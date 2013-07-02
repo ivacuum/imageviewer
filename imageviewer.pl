@@ -12,6 +12,7 @@ use Ivacuum::Utils;
 use Ivacuum::Utils::DB;
 use Ivacuum::Utils::HTTP;
 use JSON qw(encode_json to_json);
+require './cron.pm';
 require './functions.pm';
 
 # Отключение буферизации
