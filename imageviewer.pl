@@ -111,14 +111,14 @@ my $event = EV::io $fh, EV::READ, sub {
   
   $ev_unixtime = int EV::now;
   
-  if ($s_input =~ /^GET \/(g\/(\d{2})(\d{2})(\d{2})\/(s\/|t\/)?(\d+_[\da-zA-Z]{10}\.[a-z]{3,4})) HTTP/) {
+  if ($s_input =~ /^(GET|HEAD) \/(g\/(\d{2})(\d{2})(\d{2})\/(s\/|t\/)?(\d+_[\da-zA-Z]{10}\.[a-z]{3,4})) HTTP/) {
     # Запрос картинки
     # /g/090205/t/1_NRcuHDbMyV.jpg HTTP/1.1
-    my $path_old  = $1;
-    my $date      = $2 . $3 . $4;
-    my $date_new  = sprintf('%s/%s/%s', $2, $3, $4);
-    my $subfolder = $5;
-    my $url       = $6;
+    my $path_old  = $2;
+    my $date      = $3 . $4 . $5;
+    my $date_new  = sprintf('%s/%s/%s', $3, $4, $5);
+    my $subfolder = $6;
+    my $url       = $7;
 
     my $path = sprintf('g/%s/%s%s', $date_new, $subfolder, $url);
 
