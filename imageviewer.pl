@@ -12,13 +12,12 @@ use Ivacuum::Utils;
 use Ivacuum::Utils::DB;
 use Ivacuum::Utils::HTTP;
 use JSON qw(encode_json to_json);
-require './cron.pm';
 require './functions.pm';
 
 # Отключение буферизации
 $| = 1;
 
-my($db, $s_accepted, $s_starttime) = (undef, 0, $^T);
+my($s_accepted, $s_starttime) = (0, $^T);
 
 # Настройки
 my %g_cfg = (
@@ -45,9 +44,9 @@ load_json_config('config.dev.json', \%g_cfg) if $g_opt{'dev'};
 Ivacuum::Utils::set_debug_level($g_cfg{'debug'});
 Ivacuum::Utils::set_sitename($g_cfg{'sitename'});
 Ivacuum::Utils::DB::set_db_credentials($g_cfg{'db_host'}, $g_cfg{'db_name'}, $g_cfg{'db_user'}, $g_cfg{'db_pass'});
-Ivacuum::Utils::DB::set_db(\$db);
 
 # Подключение к БД
+my $db = get_db();
 db_connect();
 
 # Перезагрузка настроек
@@ -242,7 +241,7 @@ sub cron_update_views {
           image_date = ?
       AND
           image_url = ?';
-  my $result = $db->prepare($sql);
+  my $result = $$db->prepare($sql);
 
   foreach my $index (keys %g_views) {
     # Начисляем просмотры
